@@ -193,7 +193,7 @@ class ConditionalUnet1D(nn.Module):
         # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
         timesteps = timesteps.expand(sample.shape[0])
 
-        global_feature = self.diffusion_step_encoder(timesteps)
+        global_feature = self.diffusion_step_encoder(timesteps)  # Position Embedding
 
         if global_cond is not None:
             global_feature = torch.cat([

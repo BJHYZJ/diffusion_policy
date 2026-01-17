@@ -43,7 +43,7 @@ class DiffusionUnetHybridImagePolicy(BaseImagePolicy):
         # parse shape_meta
         action_shape = shape_meta['action']['shape']
         assert len(action_shape) == 1
-        action_dim = action_shape[0]
+        action_dim = action_shape[0]  # action dimension
         obs_shape_meta = shape_meta['obs']
         obs_config = {
             'low_dim': [],
@@ -88,16 +88,16 @@ class DiffusionUnetHybridImagePolicy(BaseImagePolicy):
                         modality.obs_randomizer_kwargs.crop_width = cw
 
         # init global state
-        ObsUtils.initialize_obs_utils_with_config(config)
+        ObsUtils.initialize_obs_utils_with_config(config)  # config robomimic
 
         # load model
         policy: PolicyAlgo = algo_factory(
-                algo_name=config.algo_name,
-                config=config,
-                obs_key_shapes=obs_key_shapes,
-                ac_dim=action_dim,
-                device='cpu',
-            )
+            algo_name=config.algo_name,
+            config=config,
+            obs_key_shapes=obs_key_shapes,
+            ac_dim=action_dim,
+            device='cpu',
+        )
 
         obs_encoder = policy.nets['policy'].nets['encoder'].nets['obs']
         
@@ -322,7 +322,7 @@ class DiffusionUnetHybridImagePolicy(BaseImagePolicy):
             (bsz,), device=trajectory.device
         ).long()
         # Add noise to the clean images according to the noise magnitude at each timestep
-        # (this is the forward diffusion process)
+        # (this is the forward diffusion process) 
         noisy_trajectory = self.noise_scheduler.add_noise(
             trajectory, noise, timesteps)
         
@@ -338,9 +338,9 @@ class DiffusionUnetHybridImagePolicy(BaseImagePolicy):
 
         pred_type = self.noise_scheduler.config.prediction_type 
         if pred_type == 'epsilon':
-            target = noise
+            target = noise  # predict noise
         elif pred_type == 'sample':
-            target = trajectory
+            target = trajectory  # predict trajectory directly
         else:
             raise ValueError(f"Unsupported prediction type {pred_type}")
 

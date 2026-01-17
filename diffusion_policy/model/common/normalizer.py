@@ -51,7 +51,7 @@ class LinearNormalizer(DictOfTensorMixin):
     def __setitem__(self, key: str , value: 'SingleFieldLinearNormalizer'):
         self.params_dict[key] = value.params_dict
 
-    def _normalize_impl(self, x, forward=True):
+    def _normalize_impl(self, x, forward=True):  # Implementation
         if isinstance(x, dict):
             result = dict()
             for key, value in x.items():
